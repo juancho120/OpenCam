@@ -14,11 +14,11 @@ It is the source of truth for the implementation tasks below and is read through
 
 ## Tasks
 
-- T1 — Normalize the Expo foundation — linked S3 — route: mobile foundation — commit: pending
-- T2 — Create feature-first boundaries — linked S3 — route: mobile foundation — commit: pending
-- T3 — Implement local device registry — linked S4 — route: `features/device-registry` — commit: pending
-- T4 — Add navigation and empty state — linked S4 — route: `app` and registry screen — commit: pending
-- T5 — Verify the slice — linked S6 — route: checks — commit: pending
+- T1 — Normalize the Expo foundation — linked S3 — route: mobile foundation — commit: d4ffa0c
+- T2 — Create feature-first boundaries — linked S3 — route: mobile foundation — commit: d4ffa0c
+- T3 — Implement local device registry — linked S4 — route: `features/device-registry` — commit: d4ffa0c
+- T4 — Add navigation and empty state — linked S4 — route: `app` and registry screen — commit: d4ffa0c
+- T5 — Verify the slice — linked S6 — route: checks — commit: d4ffa0c
 
 ## Log
 

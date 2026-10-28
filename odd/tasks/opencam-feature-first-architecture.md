@@ -17,11 +17,11 @@ It defines the feature boundary before implementation; it does not authorize sou
 
 ## Tasks
 
-- T1 — Define included and excluded capabilities — docs only — commit: pending
-- T2 — Document feature-first boundaries and dependency rules — docs only — commit: pending
-- T3 — Document implementation order and acceptance gates — docs only — commit: pending
-- T4 — Add relay and Google Drive boundaries — linked S7-S8 — docs only — commit: pending
-- T5 — Add OpenCam account and ownership boundaries — linked S9 — docs only — commit: pending
+- T1 — Define included and excluded capabilities — docs only — commit: d4ffa0c
+- T2 — Document feature-first boundaries and dependency rules — docs only — commit: d4ffa0c
+- T3 — Document implementation order and acceptance gates — docs only — commit: d4ffa0c
+- T4 — Add relay and Google Drive boundaries — linked S7-S8 — docs only — commit: d4ffa0c
+- T5 — Add OpenCam account and ownership boundaries — linked S9 — docs only — commit: d4ffa0c
 
 ## Log
 
