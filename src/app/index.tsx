@@ -6,6 +6,7 @@ import {
   asyncStorageDeviceRepository,
   type Device,
 } from '../features/device-registry';
+import { simulatedDeviceDiscovery } from '../features/device-discovery';
 
 export default function DeviceRegistryScreen() {
   const registry = useMemo(
@@ -14,6 +15,7 @@ export default function DeviceRegistryScreen() {
   );
   const [devices, setDevices] = useState<Device[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDiscovering, setIsDiscovering] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadDevices = useCallback(async () => {
@@ -56,10 +58,26 @@ export default function DeviceRegistryScreen() {
     };
   }, [registry]);
 
-  const loadSampleDevice = async () => {
+  const discoverDevices = async () => {
     setError(null);
-    await registry.loadSimulatedDevices();
-    await loadDevices();
+    setIsDiscovering(true);
+
+    try {
+      const discoveredDevices = await simulatedDeviceDiscovery.discover();
+      await Promise.all(
+        discoveredDevices.map((device) =>
+          registry.add({
+            ...device,
+            createdAt: new Date().toISOString(),
+          }),
+        ),
+      );
+      await loadDevices();
+    } catch {
+      setError('No pudimos buscar cámaras en tu red.');
+    } finally {
+      setIsDiscovering(false);
+    }
   };
 
   const removeDevice = async (deviceId: string) => {
@@ -77,6 +95,18 @@ export default function DeviceRegistryScreen() {
           La primera base local para descubrir y administrar tus dispositivos.
         </Text>
 
+        <Pressable
+          style={[styles.primaryButton, isDiscovering && styles.disabledButton]}
+          disabled={isDiscovering}
+          onPress={discoverDevices}
+        >
+          {isDiscovering ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.primaryButtonText}>Buscar cámaras</Text>
+          )}
+        </Pressable>
+
         {isLoading ? <ActivityIndicator color="#2b59c3" style={styles.loader} /> : null}
         {error ? <Text style={styles.error}>{error}</Text> : null}
 
@@ -84,12 +114,9 @@ export default function DeviceRegistryScreen() {
           <View style={styles.emptyState}>
             <Text style={styles.emptyTitle}>Todavía no hay cámaras</Text>
             <Text style={styles.emptyText}>
-              En el próximo paso vamos a detectar dispositivos reales. Por ahora podés
-              cargar una cámara simulada para validar el flujo.
+              Todavía no encontramos dispositivos guardados. La búsqueda actual usa un
+              adaptador simulado mientras definimos el protocolo de cámaras reales.
             </Text>
-            <Pressable style={styles.primaryButton} onPress={loadSampleDevice}>
-              <Text style={styles.primaryButtonText}>Cargar cámara de prueba</Text>
-            </Pressable>
           </View>
         ) : null}
 
@@ -134,6 +161,7 @@ const styles = StyleSheet.create({
   emptyText: { color: '#52627a', fontSize: 15, lineHeight: 22, marginTop: 10 },
   primaryButton: { alignItems: 'center', backgroundColor: '#2b59c3', borderRadius: 12, marginTop: 22, padding: 15 },
   primaryButtonText: { color: '#fff', fontSize: 15, fontWeight: '700' },
+  disabledButton: { opacity: 0.7 },
   deviceList: { gap: 12, marginTop: 24 },
   deviceCard: { alignItems: 'center', backgroundColor: '#fff', borderRadius: 16, flexDirection: 'row', justifyContent: 'space-between', padding: 18 },
   deviceInfo: { flex: 1 },
